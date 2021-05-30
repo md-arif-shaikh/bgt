@@ -1,7 +1,7 @@
 #+TITLE: Record Blood Glucose Level with Emacs
 #+AUTHOR: Md Arif Shaikh
 
-* This package helps you keep record of your blood glucose level with emacs
+This package helps you keep record of your blood glucose level with emacs
 * Installation
 #+BEGIN_SRC emacs-lisp
   (use-package bgt
