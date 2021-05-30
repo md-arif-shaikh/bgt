@@ -1,0 +1,17 @@
+#+TITLE: Record Blood Glucose Level with Emacs
+#+AUTHOR: Md Arif Shaikh
+
+* This package helps you keep record of your blood glucose level with emacs
+* Installation
+#+BEGIN_SRC emacs-lisp
+  (use-package bgt
+    :straight (bgt :type git :host github :repo "md-arif-shaikh/emacs-bgt")
+    :config
+    (setq bgt-file-name "~/Dropbox/org/bgt.org"
+	  bgt-csv-file-name "~/Dropbox/org/bgt.csv"
+	  bgt-python-file "~/Dropbox/Codes/bgt.py"))
+#+END_SRC
+
+* Usage
+  - ~M-x bgt-add-entry~ to add an entry.
+  - ~M-x bgt-plot~ to show trend.
