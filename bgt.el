@@ -30,6 +30,7 @@
 ;;; Code:
 
 (require 'org)
+(require 'dash)
 
 (defcustom bgt-file-name nil
   "Org file name to save the blood glucose data."
@@ -72,25 +73,55 @@
     (insert (format ":TABLE_EXPORT_FILE: %s\n" bgt-csv-file-name))
     (insert ":TABLE_EXPORT_FORMAT: orgtbl-to-csv\n")
     (insert ":END:\n\n")
+    (insert "#+TBLNAME: bgt\n")
     (insert "|--|--|--|--|--|\n")
     (insert "|Date |BG | Category | Test | Lab|\n")
     (insert "|--|--|--|--|--|\n")
     (write-file bgt-file-name)))
+
+(defun bgt--goto-table-begin (name)
+  "Go to begining of table named NAME if point is not in any table."
+  (unless (org-at-table-p)
+    (let ((org-babel-results-keyword "NAME"))
+      (org-babel-goto-named-result name)
+      (forward-line 2)
+      (goto-char (org-table-begin)))))
+
+(defun bgt-get-lab-names (data-file)
+  "Get the lab names for completion from the data in DATA-FILE.
+DATA-FILE is the `org` file where the data of glucose levels are stored."
+  (if (not (file-exists-p data-file))
+      '()
+    (let ((buff-name (concat (temporary-file-directory) "bgt-labs.org"))
+	  (lab-names '()))
+      (with-current-buffer (generate-new-buffer buff-name)
+        (insert-buffer-substring (find-file-noselect data-file))
+	(bgt--goto-table-begin "bgt")
+	(forward-line 2)
+	(while (org-at-table-p)
+	  (push (string-trim (org-table-get-field 5)) lab-names)
+          (forward-line))
+	(kill-buffer buff-name)
+	(kill-buffer (-last-item (split-string data-file "/")))
+	(delete-file buff-name)
+	(delete-dups lab-names)))))
 
 (defun bgt-add-entry ()
   "Add bg record."
   (interactive)
   (let ((date-time (org-read-date 'with-time nil nil "Record time:  "))
 	(bg-level (read-string "BG level: "))
-	(bg-category (completing-read "Record type: " '("Fasting" "Random" "Post-prandial")))
+	(bg-category (completing-read "Record type: " '("Fasting" "Random" "Post-prandial" "HbA1c")))
 	(bg-test (completing-read "Test type: " '("Plasma" "Capillary")))
-	(bg-lab (completing-read "Lab Name: " '("Glucometer"))))
+	(bg-lab (completing-read "Lab name: " (bgt-get-lab-names bgt-file-name))))
     (unless (file-exists-p bgt-file-name)
       (bgt-create-initial-file))
     (with-temp-buffer
       (insert (format "|%s |%s |%s |%s |%s |\n" date-time bg-level bg-category bg-test bg-lab))
       (append-to-file (point-min) (point-max) bgt-file-name)
-      (switch-to-buffer (find-file-noselect bgt-file-name))
+      (when (string-equal (completing-read "Add another entry: " '("y" "n")) "y")
+	(bgt-add-entry))
+    (with-current-buffer (find-file-noselect bgt-file-name))
       (goto-char (point-max))
       (forward-line -1)
       (org-table-align)
