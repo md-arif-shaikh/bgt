@@ -32,27 +32,27 @@
 (require 'org)
 (require 'dash)
 
-(defcustom bgt-file-name nil
+(defcustom bgt-file-name "~/bgt.org"
   "Org file name to save the blood glucose data."
   :type 'string
   :group 'bgt)
 
-(defcustom bgt-csv-file-name nil
+(defcustom bgt-csv-file-name "~/bgt.csv"
   "CSV file name for exporting the table data from org file."
   :type 'string
   :group 'bgt)
 
-(defcustom bgt-python-file nil
+(defcustom bgt-python-file "~/bgt.py"
   "Path to the python script for plotting."
   :type 'string
   :group 'bgt)
 
-(defcustom bgt-python-path nil
+(defcustom bgt-python-path "~/miniconda/bin/python"
   "Path to python."
   :type 'string
   :group 'bgt)
 
-(defcustom bgt-plot-file nil
+(defcustom bgt-plot-file "~/bgt.pdf"
   "File name to save the plot."
   :type 'string
   :group 'bgt)
