@@ -108,11 +108,6 @@ DATA-FILE is the `org` file where the data of glucose levels are stored."
 	(delete-file buff-name)
 	(delete-dups lab-names)))))
 
-(defcustom bgt-lab-names (bgt-get-lab-names bgt-file-name)
-  "List of labs for completion."
-  :type 'list
-  :group 'bgt)
-
 (defun bgt-add-entry ()
   "Add entry to blood glucose table."
   (interactive)
@@ -120,7 +115,7 @@ DATA-FILE is the `org` file where the data of glucose levels are stored."
 	 (bg-level (read-number "Glucose level: "))
 	 (bg-category (completing-read "Test category: " '("Fasting" "Random" "Post-prandial" "HbA1c")))
 	 (bg-sample (completing-read "Blood sample: " '("Plasma" "Capillary")))
-	 (bg-lab (completing-read "Lab name: " bgt-lab-names)))
+	 (bg-lab (completing-read "Lab name: " (bgt-get-lab-names bgt-file-name))))
     (unless (file-exists-p bgt-file-name)
       (bgt-create-initial-file))
     (with-temp-buffer
