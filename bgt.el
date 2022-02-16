@@ -61,11 +61,11 @@
 (defun bgt-create-initial-file ()
   "Create the data file with initial inputs when the file does not exist."
   (unless bgt-file-name
-    (error "`bgt-file-name` can not be nil.  Set it using `(setq bgt-file-name '/path-to-file/filename.org')`!"))
+    (user-error "`bgt-file-name` can not be nil.  Set it using `(setq bgt-file-name '/path-to-file/filename.org')`!"))
   (unless (string-equal "org" (file-name-extension bgt-file-name))
-    (error "`bgt-file-name` should be an `org` file!"))
+    (user-error "`bgt-file-name` should be an `org` file!"))
   (unless bgt-csv-file-name
-    (error "`bgt-csv-file-name` can not be nil.  Set it using `(setq bgt-csv-file-name '/path-to-file/filename.csv')`!"))
+    (user-error "`bgt-csv-file-name` can not be nil.  Set it using `(setq bgt-csv-file-name '/path-to-file/filename.csv')`!"))
   (with-current-buffer (generate-new-buffer bgt-file-name)
     (insert "#+TITLE: Blood Glucose Table\n\n")
     (insert "* BGT\n")
@@ -154,7 +154,7 @@ DATA-FILE is the `org` file where the data of glucose levels are stored."
 	 (org-read-date nil nil nil "End Date: ")))
   (bgt-export-to-csv)
   (unless bgt-python-file
-    (error "`bgt-python-file` can not be nil.  'setq bgt-python-file'!"))
+    (user-error "`bgt-python-file` can not be nil.  'setq bgt-python-file'!"))
   (unless bgt-plot-file
     (setq bgt-plot-file (concat (temporary-file-directory) "bgt.pdf")))
   (when (file-exists-p bgt-plot-file)
