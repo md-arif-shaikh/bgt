@@ -103,9 +103,7 @@ DATA-FILE is the `org` file where the data of glucose levels are stored."
 	(while (org-at-table-p)
 	  (push (string-trim (org-table-get-field 5)) lab-names)
           (forward-line))
-	(kill-buffer buff-name)
 	(kill-buffer (-last-item (split-string data-file "/")))
-	(delete-file buff-name)
 	(delete-dups lab-names)))))
 
 (defcustom bgt-lab-names (bgt-get-lab-names bgt-file-name)
