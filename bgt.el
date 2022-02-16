@@ -60,14 +60,11 @@
 
 (defun bgt-create-initial-file ()
   "Create the data file with initial inputs when the file does not exist."
-  (unless bgt-file-name
-    (user-error "`bgt-file-name` can not be nil.  Set it using `(setq bgt-file-name '/path-to-file/filename.org')`!"))
   (unless (string-equal "org" (file-name-extension bgt-file-name))
     (user-error "`bgt-file-name` should be an `org` file!"))
-  (unless bgt-csv-file-name
-    (user-error "`bgt-csv-file-name` can not be nil.  Set it using `(setq bgt-csv-file-name '/path-to-file/filename.csv')`!"))
   (with-current-buffer (generate-new-buffer bgt-file-name)
-    (insert "#+TITLE: Blood Glucose Table\n\n")
+    (insert "#+TITLE: Blood Glucose Table\n")
+    (insert (format "#+AUTHOR: %s\n\n" user-full-name))
     (insert "* BGT\n")
     (insert ":PROPERTIES:\n")
     (insert (format ":TABLE_EXPORT_FILE: %s\n" bgt-csv-file-name))
@@ -132,7 +129,7 @@ DATA-FILE is the `org` file where the data of glucose levels are stored."
 (defun bgt-view-entry ()
   "View the glucose table."
   (interactive)
-  (find-file bgt-file-name))
+  (find-file-other-window bgt-file-name))
 
 (defun bgt-export-to-csv ()
   "Export bgt data to a csv file."

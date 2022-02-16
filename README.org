@@ -1,17 +1,25 @@
 #+TITLE: Record Blood Glucose Level with Emacs
 #+AUTHOR: Md Arif Shaikh
+#+EMAIL: arifshaikh.astro@gmail.com
 
-This package helps you keep record of your blood glucose level with emacs
+~bgt~ (short for ~blood glucose table~) is an [[https://www.gnu.org/software/emacs/][Emacs]] package keep a record of and track blood glucose level
 * Installation
 #+BEGIN_SRC emacs-lisp
   (use-package bgt
     :straight (bgt :type git :host github :repo "md-arif-shaikh/bgt")
     :config
-    (setq bgt-file-name "/path/to/bgt.org")
-    (setq bgt-csv-file-name "/path/to/bgt.csv")
-    (setq bgt-python-file "/path/to/bgt.py")
-    (setq bgt-python-path "/path/to/python"))
+    (setq bgt-file-name "/path/to/bgt.org")      ;; full name with path of the org file to save the glucose levels data
+    (setq bgt-csv-file-name "/path/to/bgt.csv")  ;; name of csv file to export the org table 
+    (setq bgt-python-file "/path/to/bgt.py")     ;; full path to the python script that comes with the package to plot the trend of glucose levels
+    (setq bgt-python-path "/path/to/python"))    ;; path to the python program that runs the python script
 #+END_SRC
+* Requirements
+The trend of glucose levels over the time could be seen by plotting the glucose leves vs time. For this we need
+- [[https://www.python.org/][Python]] installed on your machine.
+- [[https://matplotlib.org/][Matplotlib]], a plotting package for python and
+- [[https://pandas.pydata.org/][Pandas]], a DataFrame tool for python.
+
 * Usage
   - ~M-x bgt-add-entry~ to add an entry.
+  - ~M-x bgt-view-entry~ to see the org table.
   - ~M-x bgt-plot~ to show trend.
