@@ -77,7 +77,9 @@
     (insert "|--|--|--|--|--|\n")
     (insert "|Date |BG | Category | Test | Lab|\n")
     (insert "|--|--|--|--|--|\n")
-    (write-file bgt-file-name)))
+    (write-file bgt-file-name)
+    (kill-buffer (-last-item (split-string bgt-file-name "/"))))
+  (message "Created initial file."))
 
 (defun bgt--goto-table-begin (name)
   "Go to begining of table named NAME if point is not in any table."
@@ -106,26 +108,36 @@ DATA-FILE is the `org` file where the data of glucose levels are stored."
 	(delete-file buff-name)
 	(delete-dups lab-names)))))
 
+(defcustom bgt-lab-names (bgt-get-lab-names bgt-file-name)
+  "List of labs for completion."
+  :type 'list
+  :group 'bgt)
+
 (defun bgt-add-entry ()
-  "Add bg record."
+  "Add entry to blood glucose table."
   (interactive)
-  (let ((date-time (org-read-date 'with-time nil nil "Record time:  "))
-	(bg-level (read-string "BG level: "))
-	(bg-category (completing-read "Record type: " '("Fasting" "Random" "Post-prandial" "HbA1c")))
-	(bg-test (completing-read "Test type: " '("Plasma" "Capillary")))
-	(bg-lab (completing-read "Lab name: " (bgt-get-lab-names bgt-file-name))))
+  (let* ((date (org-read-date 'with-time nil nil "Date and time: "))
+	 (bg-level (read-number "Glucose level: "))
+	 (bg-category (completing-read "Test category: " '("Fasting" "Random" "Post-prandial" "HbA1c")))
+	 (bg-sample (completing-read "Blood sample: " '("Plasma" "Capillary")))
+	 (bg-lab (completing-read "Lab name: " bgt-lab-names)))
     (unless (file-exists-p bgt-file-name)
       (bgt-create-initial-file))
     (with-temp-buffer
-      (insert (format "|%s |%s |%s |%s |%s |\n" date-time bg-level bg-category bg-test bg-lab))
-      (append-to-file (point-min) (point-max) bgt-file-name)
-      (when (string-equal (completing-read "Add another entry: " '("y" "n")) "y")
-	(bgt-add-entry))
-    (with-current-buffer (find-file-noselect bgt-file-name))
+      (insert (format "|%s |%.1f |%s |%s |%s |\n" date bg-level bg-category bg-sample bg-lab))
+      (append-to-file (point-min) (point-max) bgt-file-name))
+    (when (string-equal (completing-read "Add another expense: " '("no" "yes")) "yes")
+      (bgt-add-entry))
+    (with-current-buffer (find-file-noselect bgt-file-name)
       (goto-char (point-max))
       (forward-line -1)
       (org-table-align)
       (write-file bgt-file-name))))
+
+(defun bgt-view-entry ()
+  "View the glucose table."
+  (interactive)
+  (find-file bgt-file-name))
 
 (defun bgt-export-to-csv ()
   "Export bgt data to a csv file."
