@@ -2,7 +2,7 @@
 #+AUTHOR: Md Arif Shaikh
 #+EMAIL: arifshaikh.astro@gmail.com
 
-~bgt~ (short for ~blood glucose table~) is an [[https://www.gnu.org/software/emacs/][Emacs]] package keep a record of and track blood glucose level
+~bgt~ (short for ~blood glucose table~) is an [[https://www.gnu.org/software/emacs/][Emacs]] package to keep record and track blood glucose level
 * Installation
 #+BEGIN_SRC emacs-lisp
   (use-package bgt

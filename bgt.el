@@ -110,7 +110,7 @@ DATA-FILE is the `org` file where the data of glucose levels are stored."
   (interactive)
   (let* ((date (org-read-date 'with-time nil nil "Date and time: "))
 	 (bg-level (read-number "Glucose level: "))
-	 (bg-category (completing-read "Test category: " '("Fasting" "Random" "Post-prandial" "HbA1c")))
+	 (bg-category (completing-read "Test category: " '("Fasting" "Random" "Post-prandial" "HbA1c" "Mean-Blood-Glucose")))
 	 (bg-sample (completing-read "Blood sample: " '("Plasma" "Capillary")))
 	 (bg-lab (completing-read "Lab name: " (bgt-get-lab-names bgt-file-name))))
     (unless (file-exists-p bgt-file-name)
