@@ -143,8 +143,8 @@ DATA-FILE is the `org` file where the data of glucose levels are stored."
 (defun bgt-plot (start-date end-date)
   "Plot BG data from START-DATE to END-DATE."
   (interactive
-   (list (org-read-date nil nil nil "Start Date: ")
-	 (org-read-date nil nil nil "End Date: ")))
+   (list (org-read-date t nil nil "Start Date: ")
+	 (org-read-date t nil nil "End Date: ")))
   (bgt-export-to-csv)
   (unless bgt-python-file
     (user-error "`bgt-python-file` can not be nil.  'setq bgt-python-file'!"))
