@@ -119,7 +119,7 @@ DATA-FILE is the `org` file where the data of glucose levels are stored."
     (with-temp-buffer
       (insert (format "|%s |%.1f |%s |%s |%s |%.1f|\n" date bg-level bg-category bg-sample bg-lab (string-to-number bg-weight)))
       (append-to-file (point-min) (point-max) bgt-file-name))
-    (when (string-equal (completing-read "Add another expense: " '("no" "yes")) "yes")
+    (when (string-equal (completing-read "Add another entry? " '("no" "yes")) "yes")
       (bgt-add-entry))
     (with-current-buffer (find-file-noselect bgt-file-name)
       (goto-char (point-max))
